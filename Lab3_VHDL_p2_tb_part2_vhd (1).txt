@@ -1,0 +1,71 @@
+LIBRARY ieee;
+USE     ieee.std_logic_1164.all;
+USE     ieee.std_logic_signed.all;
+
+ENTITY tb_part2 IS
+END tb_part2;
+
+ARCHITECTURE Behavior OF tb_part2 IS
+    COMPONENT part2
+        PORT ( Clk, D : IN  STD_LOGIC;
+               Q      : OUT STD_LOGIC);
+    END COMPONENT;
+
+SIGNAL Clk  : STD_LOGIC;
+SIGNAL D    : STD_LOGIC;
+SIGNAL Q    : STD_LOGIC;
+
+
+BEGIN
+   
+--                                                           
+--           ___     ___     ___     ___     ___     ___     
+--          |   |   |   |   |   |   |   |   |   |   |   |    
+--   Clk    |   |___|   |___|   |___|   |___|   |___|   |___ 
+--              :   :   :   :   :   :   :   :   :   :   :   :
+--           ___    :    _______    :    _______    :   :   :
+--          |   |   :   |   :   |   :   |   :   |   :   :   :
+--   D      |   |_______|   :   |_______|   :   |___________ 
+--              :   :   :   :   :   :   :   :   :   :   :   :
+--           _______    :    _______    :    _______    :   :
+--          |   :   |   :   |   :   |   :   |   :   |   :   :
+--   Qa     |   :   |_______|   :   |_______|   :   |_______
+--              :   :   :   :   :   :   :   :   :   :   :   :
+--              :    _______    :    _______    :    _______
+--          |   :   |   :   |   :   |   :   |   :   |   :   :
+--   Qb     |_______|   :   |_______|   :   |_______|   :   :
+--              :   :   :   :   :   :   :   :   :   :   :   :                                             
+--                                                           
+   
+vectors: PROCESS
+    BEGIN
+        Clk <= '1';  D <= '1';
+    WAIT FOR 10ns;
+        Clk <= '0';  D <= '0';
+    WAIT FOR 10ns;
+        Clk <= '1';
+    WAIT FOR 10ns;
+        Clk <= '0';  D <= '1';
+    WAIT FOR 10ns;
+        Clk <= '1';
+    WAIT FOR 10ns;
+	     Clk <= '0';  D <= '0';
+    WAIT FOR 10ns;
+        Clk <= '1';
+    WAIT FOR 10ns;
+        Clk <= '0';  D <= '1';
+    WAIT FOR 10ns;
+        Clk <= '1';
+    WAIT FOR 10ns;
+        Clk <= '0';  D <= '0';
+    WAIT FOR 10ns;
+        Clk <= '1';
+    WAIT FOR 10ns;
+        Clk <= '0';
+    WAIT FOR 10ns;
+        Clk <= '1';
+    WAIT;
+END PROCESS;
+
+    U1 : part2 PORT MAP(Clk, D, Q);
+END Behavior;

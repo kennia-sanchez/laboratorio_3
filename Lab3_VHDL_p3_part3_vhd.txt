@@ -1,0 +1,81 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+ENTITY part3 IS
+   PORT ( SW   : IN  STD_LOGIC_VECTOR(1 DOWNTO 0);
+          LEDR : OUT STD_LOGIC_VECTOR(9 DOWNTO 0));
+END part3;
+
+ARCHITECTURE Structural OF part3 IS
+   COMPONENT D_latch_3 
+      PORT ( Clk, D : IN  STD_LOGIC;
+             Q      : OUT STD_LOGIC);
+   END COMPONENT;
+   SIGNAL Qm, Qs, not_c : STD_LOGIC;
+BEGIN
+    
+--                     .----------.                     .----------.
+--                     |          |  Qm                 |          |  Qs
+--    SW(0)------------| D      Q |---------------------| D      Q |-------- LEDR(0) 
+--                     |          |                     |          |
+--                     |          |                     |          |         _
+--    SW(1)-.->o-------|Clk     _ |      .--------------|Clk     _ |-------- Q
+--          |    not_c |        Q |      |              |        Q |
+--          |          '----------'      |              '----------'
+--          |                            |       
+--          '----------------------------'                              
+--                                         
+   
+	not_c <= NOT(SW(1));
+	
+   U1: D_latch_3 PORT MAP (not_c, SW(0), Qm);
+   U2: D_latch_3 PORT MAP (SW(1),    Qm, Qs);
+
+   LEDR(0) <= Qs;
+   LEDR(9 DOWNTO 1) <= "000000000";
+
+END Structural;
+
+
+
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+ENTITY D_latch_3 IS
+   PORT ( Clk, D : IN  STD_LOGIC;
+          Q      : OUT STD_LOGIC);
+END D_latch_3;
+
+ARCHITECTURE Structural OF D_latch_3 IS
+   SIGNAL R, R_g, S_g, Qa, Qb : STD_LOGIC ;
+   ATTRIBUTE keep: boolean;
+   ATTRIBUTE keep of R, R_g, S_g, Qa, Qb : signal is true;
+BEGIN
+   
+--            S .----.                                 
+--  D ---.------|     '  S_g     .----.                  
+--       |      |      '0--------|     '                 
+--       |   .--|____ '      .-- |      '0------- Qa(Q)  
+--       |   |               |   |____ ' /             
+--       |   |               |          /              
+--       |   |               '-----.   /               
+--       |   |                      \ /                
+--  Clk---)--|                       X                 
+--       |   |                      / \                
+--       |   |                .----'   \               
+--       |   |  .----.       |   .----. \              
+--       |   '--|     '      '---|     ' \             
+--       |      |      '0--------|      '0------ Qb     
+--       '->o---|____ '  R_g     |____ '                 
+--            R                                    
+--                                                 
+   
+   R   <= NOT D;
+   S_g <= NOT (D AND Clk);
+   R_g <= NOT (R AND Clk);
+   Qa  <= NOT (S_g AND Qb);
+   Qb  <= NOT (R_g AND Qa);
+	
+   Q <= Qa;
+END Structural;

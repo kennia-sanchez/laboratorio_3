@@ -1,0 +1,46 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+
+ENTITY part4 IS 
+   PORT ( SW   : IN  STD_LOGIC_VECTOR(1 DOWNTO 0);
+          LEDR : OUT STD_LOGIC_VECTOR(9 DOWNTO 0)  );
+END part4;
+
+ARCHITECTURE Behavior OF part4 IS
+
+SIGNAL Din, Clk, Qa, Qb, Qc: STD_LOGIC;
+
+BEGIN
+   
+	Clk <= SW(0);
+	Din <= SW(1);
+	LEDR(6 DOWNTO 2) <= "00000";
+	LEDR(9) <= Qa;
+	LEDR(8) <= Qb;
+	LEDR(7) <= Qc;
+	LEDR(1) <= Din;
+	LEDR(0) <= Clk;
+	
+   PROCESS (Din, Clk)
+   BEGIN
+      IF (Clk = '1') THEN
+         Qa <= Din;
+      END IF;
+   END PROCESS;
+
+   PROCESS (Clk)
+   BEGIN
+      IF (Clk'EVENT AND Clk = '1') THEN
+         Qb <= Din;
+      END IF;
+   END PROCESS;
+
+   PROCESS (Clk)
+   BEGIN
+      IF (Clk'EVENT AND Clk = '0') THEN
+         Qc <= Din;
+      END IF;
+   END PROCESS;
+
+END Behavior;
